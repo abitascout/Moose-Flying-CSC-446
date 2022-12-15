@@ -14,6 +14,7 @@ const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
+const login = "SELECT username, password FROM users;"
 
 
 let connection = mysql.createConnection({
@@ -28,11 +29,23 @@ let connection = mysql.createConnection({
 app.get("/query", function (request, response) {
   connection.query(SQL, [true], (error, results, fields) => {
     if (error) {
-      console.error(error.message);
-      response.status(500).send("database error");
+      console.error(error.message)
+      response.status(500).send("database error")
     } else {
-      console.log(results);
-      response.send(results);
+      console.log(results)
+      response.send(results)
+    }
+  });
+})
+
+app.get("/login", function (request, response) {
+  connection.query(login, [true], (error, results, fields)=> {
+    if (error) {
+      console.error(error.message)
+      response.status(500).send("database error")
+    } else {
+      console.log(results)
+      response.send(results)
     }
   });
 })
