@@ -1,16 +1,15 @@
-var parsedUrl = new URL(window.location.href);
-
-function query() {
-    fetch("http://" + parsedUrl.host + "/query", {
+async function login() {
+    await fetch("http://" + parsedUrl + "/login", {
         method: "GET",
-        mode: "no-cors",
+        mode: "no-cors", 
+        //redirect: "http://" + parsedUrl.host + "/query"
     })
     .then((resp) => resp.text())
     .then((data) => {
+        
         document.getElementById("response").innerHTML = data[1];
     })
     .catch((err) => {
         console.log(err);
     })
 }
-
