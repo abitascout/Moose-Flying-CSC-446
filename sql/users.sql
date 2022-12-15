@@ -12,16 +12,23 @@ CREATE TABLE users (
 
 INSERT INTO users
 VALUES(
-    "user",
-    "pass",
-    "user@example.com"
+    "Robert",
+    "327c670676944cb77685d7a2cc84b51852cd02c21f6e46cfe74a0091b6a4af7d",
+    "rhm012@email.latech.edu"
 );
 
 INSERT INTO users
 VALUES(
-    "Robert",
-    "327c670676944cb77685d7a2cc84b51852cd02c21f6e46cfe74a0091b6a4af7d",
-    "rhm012@email.latech.edu"
+    "Middle Person",
+    "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "jmb156@email.latech.edu"
+);
+
+INSERT INTO users
+VALUES(
+    "tugboat2k",
+    "b3c95b46782d66130602473ca592123f99e79d756aed36357f53e0d4239696a5",
+    "trt021@email.latech.edu"
 );
 
 
