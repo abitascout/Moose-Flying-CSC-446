@@ -1,9 +1,17 @@
+# Starting from a node image built on linux distro-alpine
 FROM node:alpine
 
+# Set the working directory
 WORKDIR /app
 
+# Copying all program files/dependencies 
+# into our Docker image at the root directory "./"
 COPY package.json ./
 
+# Executes commands in a new layer on top of the current image
+# npm install is run after the image is "loaded" -- on top on the current image
+# Installs packages while building the image
 RUN npm install
 
+#EXPOSE 3000
 CMD [ "npm", "run", "start" ]

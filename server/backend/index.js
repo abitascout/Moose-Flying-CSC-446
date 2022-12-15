@@ -2,15 +2,18 @@ const express = require("express");
 const mysql = require("mysql2");
 
 
+const app = express();
+app.use(express.json());
+app.use("/", express.static("frontend"));
+
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
+
+
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
-
-const app = express();
-app.use(express.json());
 
 
 let connection = mysql.createConnection({
@@ -20,8 +23,6 @@ let connection = mysql.createConnection({
   database: "users"
 });
 
-
-app.use("/", express.static("frontend"));
 
 
 app.get("/query", function (request, response) {
