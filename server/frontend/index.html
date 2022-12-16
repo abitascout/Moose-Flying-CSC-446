@@ -1,20 +1,25 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="login.js"></script>
+    <title>Login Page</title>
+</head>
+<body>
+    <h2>Login Here</h2>
+    
+        <form action="" class="login">
+           
+            <label for="username"> 
+                <input type="text" id="username" class="login", required>
+            </label>
 
-<html>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-	<link type="text/css" rel="stylesheet" href="common.css">
-	<script type="text/javascript" src="common.js"></script>
-    <head>
-        <title>
-            Access Control Project
-        </title>
-    </head>
-
-    <body>
-        <div class="content">
-            <button class="button" onclick="query()">Query</button>
-            <p></p>
-            <textarea id="response" rows="20" cols="45" placeholder="Database Results"></textarea>
-		</div>
-    </body>
+            
+            <label for="password"><input type="text" id="password" class="login" required></label>
+            <input type = "submit" onclick="login()">
+        </form>
+        <div class="response" id="response"></div>
+</body>
 </html>
