@@ -2,10 +2,8 @@
 <html lang="en">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="./loginpage.js"></script>
+    
+    <script type="text/javascript" src="./common.js"></script>
     <title>Login Page</title>
 </head>
 <body>
@@ -14,12 +12,12 @@
         <form action="" class="login">
            
             <label for="username"> 
-                <input type="text" id="username" class="login", required>
+                <input type="text" id="username" class="login" required>
             </label>
 
             
             <label for="password"><input type="text" id="password" class="login" required></label>
-            <input type = "submit" onclick="login()">
+            <button class = "submit" onclick="login()">Login</button>
         </form>
         <div class="response" id="response"></div>
 </body>

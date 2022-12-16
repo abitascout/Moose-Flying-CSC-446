@@ -8,7 +8,6 @@ function login() {
     fetch("http://" + parsedUrl + "/login", {
         method: "GET",
         mode: "no-cors", 
-        //redirect: "http://" + parsedUrl.host + "/query"
     })
     .then((resp) => resp.text())
     .then((data) => {
