@@ -19,8 +19,8 @@ VALUES(
 
 INSERT INTO users
 VALUES(
-    "Middle Person",
-    "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e5ec7",
+    "Middle",
+    "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e",
     "jmb156@email.latech.edu"
 );
 

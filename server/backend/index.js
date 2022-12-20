@@ -45,24 +45,31 @@ app.get('/', (request, response) => {
 });
 
 
-app.post("/login", async (request, response) => {
+app.post("/login", (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
-  const {username, password} = request.body
+  const username = request.body.username
+  const password = request.body.password
   const hashPassword = sha256(password)
   if (username && password) {
-    connection.query("SELECT * FROM users WHERE username = ? AND password = ?'", [username, hashPassword], (error, results, fields)=> {
+    connection.query("SELECT * FROM users",[true], (error, results)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
+        return
       }
       // If we get anything from the database
       // results object will be populated
-      if ( results.length > 0) {
+      console.log(results)
+      if (results) {
         // Redirect to query page
-        response.status(200).redirect("/query");
+        console.log(results.username)
+        response.status(200).redirect("query.html");
+        return
       } else {
-        response.status(401).redirect("/login")
+        console.log(results)
+        response.status(401).redirect("/")
+        return
       }
     });
   } else {
