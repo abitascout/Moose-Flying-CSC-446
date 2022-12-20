@@ -1,14 +1,13 @@
 const express = require("express");
 const mysql = require("mysql2");
-
-
 const app = express();
+const sha256 = require('crypto-js/sha256');
+
 
 app.use(express.json());
 app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
-// Can only send GET&POST req. This allows for all verbs
-app.use(methodOverride("_method"))
+
 
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
@@ -45,16 +44,14 @@ app.get('/', (request, response) => {
 	response.send("index.html");
 });
 
-app.get('/login', (request, response) => {
-	// Render login template
-	response.send("/login")
-})
-app.post("/login", (req, res) => {
+
+app.post("/login", async (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
-  const {username, password} = req.body
+  const {username, password} = request.body
+  const hashPassword = sha256(password)
   if (username && password) {
-    connection.query("SELECT * FROM users WHERE username = ? AND password = ?'", [username, sha256(password)], (error, results, fields)=> {
+    connection.query("SELECT * FROM users WHERE username = ? AND password = ?'", [username, hashPassword], (error, results, fields)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -63,13 +60,13 @@ app.post("/login", (req, res) => {
       // results object will be populated
       if ( results.length > 0) {
         // Redirect to query page
-        res.status(200).redirect("/query");
+        response.status(200).redirect("/query");
       } else {
-        res.send("Invalid credentials")
+        response.status(401).redirect("/login")
       }
     });
   } else {
-    res.send("Invalid entry.")
+    response.send("Invalid entry.")
   }
 })
 
