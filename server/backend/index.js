@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const path = require("path")
+const ejsMate = require("ejs-mate")
 
 
 const app = express();
@@ -8,8 +9,8 @@ const app = express();
 app.use(express.json());
 app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'static')));
-
+// Can only send GET&POST req. This allows for all verbs
+app.use(methodOverride("_method"))
 
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
@@ -43,16 +44,19 @@ app.get("/query", (request, response) =>  {
 
 app.get('/', (request, response) => {
 	// Render login template
-	response.sendFile(path.join(__dirname + '/index.html'));
+	response.send("index.html");
 });
 
-app.post("/auth", (req, res) => {
+app.get('/login', (request, response) => {
+	// Render login template
+	response.send("/login")
+})
+app.post("/login", (req, res) => {
   // Capture the input fields from the index.html
-  // Reference the name of the input to capture(username, password)
-  let username = req.body.username
-  let password = req.body.password
+  // Reference the name of the input to capture(username, password) 
+  const {username, password} = req.body
   if (username && password) {
-    connection.query("SELECT username, password FROM accounts WHERE username = ? AND password = ?'", [username, sha256(password)], (error, results, fields)=> {
+    connection.query("SELECT * FROM users WHERE username = ? AND password = ?'", [username, sha256(password)], (error, results, fields)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -61,11 +65,13 @@ app.post("/auth", (req, res) => {
       // results object will be populated
       if ( results.length > 0) {
         // Redirect to query page
-        res.redirect("/query");
+        res.status(200).redirect("/query");
       } else {
         res.send("Invalid credentials")
       }
     });
+  } else {
+    res.send("Invalid entry.")
   }
 })
 
