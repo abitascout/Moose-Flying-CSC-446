@@ -17,6 +17,7 @@ const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
+const log = "SELECT *FROM users WHERE username = ? AND password = ?;"
 
 let connection = mysql.createConnection({
   host: MYSQLHOST,
@@ -52,7 +53,7 @@ app.post("/login", (request, response) => {
   const password = request.body.password
   const hashPassword = sha256(password)
   if (username && password) {
-    connection.query("SELECT * FROM users",[true], (error, results)=> {
+    connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -61,7 +62,7 @@ app.post("/login", (request, response) => {
       // If we get anything from the database
       // results object will be populated
       console.log(results)
-      if (results) {
+      if (results.length > 0) {
         // Redirect to query page
         console.log(results.username)
         response.status(200).redirect("query.html");
