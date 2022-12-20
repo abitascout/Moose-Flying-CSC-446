@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2");
-const axios = require("axios");
+const SHA256 = require("crypto-js/sha256");
 
 
 
@@ -30,8 +30,7 @@ let connection = mysql.createConnection({
 
 
 app.get("/query", function (request, response) {
-  const username = request.query.username
-  const password = request.query.encryptedpassword
+  
   connection.query(SQL, [true], (error, results, fields) => {
     if (error) {
       console.error(error.message)
@@ -43,15 +42,29 @@ app.get("/query", function (request, response) {
   });
 })
 
-app.get("/login", function (request, response) {
-  request.query
+app.post("/login", function (request, response) {
+  const username = request.query.username
+  const password = request.query.encryptedpassword
   connection.query(login, [true], (error, results, fields)=> {
     if (error) {
       console.error(error.message)
       response.status(500).send("database error")
     } else {
-      console.log(results)
-      response.send(results)
+      for(let i in request)
+      {
+        if(username == results[i])
+        {
+          for(let j in request)
+          {
+            if( SHA256(password) == results[i][j])
+            {
+              response.status(200).send("Valid")
+            }
+            else
+              response.send("Invaild Username or Password")
+          }
+        }
+      }
     }
   });
 })
