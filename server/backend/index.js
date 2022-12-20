@@ -1,5 +1,8 @@
 const express = require("express");
 const mysql = require("mysql2");
+const axios = require("axios");
+
+
 
 
 const app = express();
@@ -27,6 +30,8 @@ let connection = mysql.createConnection({
 
 
 app.get("/query", function (request, response) {
+  const username = request.query.username
+  const password = request.query.encryptedpassword
   connection.query(SQL, [true], (error, results, fields) => {
     if (error) {
       console.error(error.message)
@@ -39,6 +44,7 @@ app.get("/query", function (request, response) {
 })
 
 app.get("/login", function (request, response) {
+  request.query
   connection.query(login, [true], (error, results, fields)=> {
     if (error) {
       console.error(error.message)
