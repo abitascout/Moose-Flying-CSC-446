@@ -1,0 +1,6 @@
+
+*.cmd
+*.cmd
+node_modules/.bin/mkdirp
+.git
+
