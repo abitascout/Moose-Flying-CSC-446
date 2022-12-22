@@ -6,16 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
 </head>
+
 <body>
     <h2>Login Here</h2>
     <div class="response" id="response">
-        <form action="/login" class="login" method="post">
-            <label for="username"></label>
-            <input type="text" name="username" id="username" class="login" placeholder="username" required>
+        <form action="/login" method="post">
+            <label class="form-label" for="username"></label>
+            <input class="form-control" type="text" name="username" id="username" placeholder="username" required>
 
-            <label for="password"></label>
-            <input type="password" name="password" id="password" class="login" placeholder="password" required>
-            <input type = "submit" value="Login">
+            <label class="form-label" for="password"></label>
+            <input class="form-control" type="password" name="password" id="password" placeholder="password" required>
+            <button class="form-control btn btn-primary" type ="submit">Login</button>
         </form>
     </div>
 </body>
