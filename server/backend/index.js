@@ -76,55 +76,6 @@ app.post("/login", (request, response) => {
   }
 })
 
-/*
-// INSERT route
-app.put("/dummyRoute", (request, response) => {
-  let sqlQuery = 'INSERT INTO users SET ?;'
-  post = {username: "newUser", password:"notSureHowTo", email: "idk123@gmail.com"}
-  dbConnection.query(sqlQuery, post, (err, results) => {
-    if (err) throw err;
-    console.log(results)
-    response.send("Insert to db successful..")
-  })
-})
-
-// SELECT route
-// Selecting from the table by 'id'
-// ':' allows us to capture a variable from the URL
-app.get("/selectRoute/:id", (request, response) => {
-  // Access the variable through req.params
-  let sqlQuery = `SELECT * FROM users WHERE id = '${req.params.id}';`
-  dbConnection.query(sqlQuery, (err, result) => {
-    if (err) throw err;
-    console.log(result)
-    response.send("Item selected successfully")
-  })
-})
-
-// Delete route
-app.delete("/selectRoute/:id", (request, response) => {
-  // Access the variable through req.params
-  let sqlQuery = `DELETE * FROM users WHERE id = '${req.params.id}';`
-  dbConnection.query(sqlQuery, (err, result) => {
-    if (err) throw err;
-    console.log(result)
-    response.send("Item deleted successfully")
-  })
-})
-
-// Update route
-app.put("/updateRoute/:id", (request, response) => {
-  // Change username
-  let newUsername = req.body.username
-  let sqlQuery = `UPDATE users SET username = '${newUsername}' WHERE id = ${req.params.id};`
-  dbConnection.query(sqlQuery, (err, result) => {
-    if (err) throw err;
-    console.log(result)
-    response.send("Item selected successfully")
-  })
-})
-*/
-
 
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
