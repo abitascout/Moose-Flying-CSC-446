@@ -30,7 +30,7 @@ VALUES(
 INSERT INTO users
 VALUES(
     "tugboat2k",
-    "b3c95b46782d66130602473ca592123f99e79d756aed36357f53e0d4239696a5",
+    "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe8HiGyS9Na3971lcMt.cnt.V5i2bRuoO",
     "trt021@email.latech.edu",
     "bottom"
 );
