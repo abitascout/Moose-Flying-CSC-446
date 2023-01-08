@@ -1,7 +1,9 @@
 const express = require("express");
 const mysql = require("mysql2");
 const app = express();
-const sha256 = require('crypto-js/sha256');
+const sha256 = require("bcryptjs");
+const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
+console.log(salt)
 
 
 app.use(express.json());
@@ -51,7 +53,7 @@ app.post("/login", (request, response) => {
   // Reference the name of the input to capture(username, password) 
   const username = request.body.username
   const password = request.body.password
-  const hashPassword = sha256(password)
+  const hashPassword = sha256.hashSync(password,salt)
   if (username && password) {
     connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {

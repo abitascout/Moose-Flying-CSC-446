@@ -1,6 +1,5 @@
 
 *.cmd
 *.cmd
-node_module
 .git
 

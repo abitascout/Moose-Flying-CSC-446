@@ -14,7 +14,7 @@ CREATE TABLE users (
 INSERT INTO users
 VALUES(
     "Robert",
-    "327c670676944cb77685d7a2cc84b51852cd02c21f6e46cfe74a0091b6a4af7d",
+    "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe/WxLLgrVnO9tZWlddBg9Fdk87TKyhwi",
     "rhm012@email.latech.edu",
     "Admin"
 );
@@ -22,7 +22,7 @@ VALUES(
 INSERT INTO users
 VALUES(
     "Middle",
-    "d93006ec2e4339d770a7afd068c1f1e789a52df12f595e529fd0f302fc1e",
+    "$2a$04$ZBcpPXMSGuV0CFmqO4ncDenf2ouId/JQwsL0wnS7iJ1bRIUGbw9KW",
     "jmb156@email.latech.edu",
     "mid"
 );
