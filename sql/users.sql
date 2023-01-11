@@ -21,7 +21,7 @@ VALUES(
 
 INSERT INTO users
 VALUES(
-    "Middle",
+    "Jalen",
     "$2a$04$ZBcpPXMSGuV0CFmqO4ncDenf2ouId/JQwsL0wnS7iJ1bRIUGbw9KW",
     "jmb156@email.latech.edu",
     "mid"
