@@ -3,7 +3,7 @@
 <html>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
 	<link type="text/css" rel="stylesheet" href="common.css">
-	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript" src="index.js"></script>
     <head>
         <title>
             Access Control Project
@@ -12,9 +12,11 @@
 
     <body>
         <div class="content">
-            <button class="button" onclick="query()">Query</button>
-            <p></p>
-            <textarea id="response" rows="20" cols="45" placeholder="Database Results"></textarea>
+            <form action="/query" method="post">
+                <button class="button" onclick="query()">Query</button>
+                <p></p>
+                <textarea id="response" rows="20" cols="45" placeholder="Database Results"></textarea>
+        </form>
 		</div>
     </body>
 </html>

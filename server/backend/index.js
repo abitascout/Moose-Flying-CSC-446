@@ -1,8 +1,20 @@
 const express = require("express");
 const mysql = require("mysql2");
 const app = express();
+<<<<<<< Updated upstream
 const sha256 = require('crypto-js/sha256');
 const { request, response } = require("express");
+=======
+const sha256 = require("bcryptjs");
+const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
+const jwt = require('jsonwebtoken');
+const { response } = require("express");
+const { request } = require("http");
+
+
+
+
+>>>>>>> Stashed changes
 
 
 app.use(express.json());
@@ -23,18 +35,35 @@ let dbConnection = mysql.createConnection({
 });
 
 
+<<<<<<< Updated upstream
 app.get("/query", (request, response) =>  {
   const SQL = "SELECT * FROM users;"
   dbConnection.query(SQL, [true], (error, results, fields) => {
+=======
+
+app.post("/query", (request, response) =>  {
+  connection.query(SQL, [true], (error, results, fields) => {
+>>>>>>> Stashed changes
     if (error) {
       console.error(error.message)
       response.status(500).send("database error")
     } else {
+      fetch("http://" + "localhost:8000" + "/query", {
+        method: "GET",
+        mode: "no-cors",
+    })
+    .then((resp) => resp.text())
+    .then((data) => {
+        document.getElementById("response").innerHTML = data;
+    })
+    .catch((err) => {
+        console.log(err);
+    })
       console.log(results)
       response.send(results)
     }
   });
-})
+});
 
 // Home Page
 app.get('/', (request, response) => {
@@ -61,9 +90,19 @@ app.post("/login", (request, response) => {
       // results object will be populated
       console.log(results)
       if (results.length > 0) {
+<<<<<<< Updated upstream
         // Redirect to query page
         console.log(results.username)
         response.status(200).redirect("query.html");
+=======
+        const user = {name: results[0].username}
+        const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
+        const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
+        const roles = results[0].role
+        console.log(roles)
+        console.log(token)
+        response.status(200).redirect("query.html")
+>>>>>>> Stashed changes
         return
       } else {
         console.log(results)
