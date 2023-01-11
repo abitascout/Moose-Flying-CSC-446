@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken');
 
 
 
+
+
 app.use(express.json());
 app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
@@ -55,7 +57,6 @@ app.post("/login", (request, response) => {
   // Reference the name of the input to capture(username, password) 
   const username = request.body.username
   const password = request.body.password
-  const user = {name: username}
   const hashPassword = sha256.hashSync(password,salt)
   if (username && password) {
     connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
@@ -67,14 +68,14 @@ app.post("/login", (request, response) => {
       // If we get anything from the database
       // results object will be populated
       if (results.length > 0) {
-        const roles = results
+        const user = {name: results[0].username}
+        const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
+        const roles = {role: results[0].role}
         // Redirect to query page
-        //jwt.sign(user, process.env.ACCESS_TOKEN_STRING)
-        console.log(...results)
-        response.status(200).redirect("query.html");
+        const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
+        response.status(200).redirect("query.html").json();
         return
       } else {
-        console.log(results)
         response.status(401).redirect("/")
         return
       }
