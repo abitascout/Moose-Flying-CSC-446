@@ -60,7 +60,7 @@ app.post("/login", (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
   const {username, password} = request.body
-  const hashPassword = sha256(password)
+  const hashPassword = sha256(password, salt)
   if (username && password) {
     dbConnection.query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {
