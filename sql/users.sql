@@ -13,7 +13,11 @@ CREATE TABLE users (
 INSERT INTO users
 VALUES(
     "Robert",
+<<<<<<< Updated upstream
     "327c670676944cb77685d7a2cc84b51852cd02c21f6e46cfe74a0091b6a4af7d",
+=======
+    "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe/WxLLgrVnO9tZWlddBg9Fdk87TKyhwi",
+>>>>>>> Stashed changes
     "rhm012@email.latech.edu"
 );
 
