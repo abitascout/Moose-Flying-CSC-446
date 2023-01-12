@@ -18,10 +18,9 @@ function validating(){
     const searchParams = new URL (parsedUrl).searchParams;
     const entries = new URLSearchParams(searchParams).entries();
     const array = Array.from(entries);
-    console.log(array[0][1])
+
     let obj = {
         token: array[0][1],
-        acc: array[1][1]
     }
 
     fetch ("http://" + parsedUrl.host + "/valid",{
@@ -31,19 +30,20 @@ function validating(){
         
 
     }).then((resp) => { 
-        if(!resp.ok){
-        // send to logign
-        alert("Token expired please log in again")
+        if(resp.status == 401)
+        {
+            alert("Token expired please click exit and log in again")
+            return
         }
-        console.log(resp)
     })
     .then(query())
     .catch((err) =>{
+        
         console.log(err)
     })
     
 }
 
-function valid(){
-    validating();
+function leave(){
+    window.location.replace("http://" + parsedUrl.host)
 }

@@ -16,7 +16,7 @@ app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
 
 
-var access = ""
+var access
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
 
@@ -76,11 +76,10 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = results[0].role
         // Redirect to query page
-        var token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
-        save(token)
+        const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn: '10s'});
+        save(ACCESS_TOKEN)
         const obj = {
-          v1: token,
-          v2: ACCESS_TOKEN
+          v1: token
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
@@ -94,21 +93,29 @@ app.post("/login", (request, response) => {
   } else {
     response.send("Invalid entry.")
   }
-  
 })
 
 app.post("/valid", (request, response) => 
 {
   const income = request.body.token
-  const check = request.body.ACCESS_TOKEN
-  if(jwt.verify(check, income))
-  {
-    response.status(200)
-    return
+  
+  try{
+    jwt.verify(income, access)
+    return response.status(200)
+    
   }
-  response.status(401).redirect("/")
-  return
+  catch(e)
+  {
+    if(e instanceof jwt.JsonWebTokenError){
+        return response.status(401).end()
+        
+    }
+  }
+  
 })
+  
+  
+
 
 
 app.listen(PORT, HOST);
