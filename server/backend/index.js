@@ -54,8 +54,14 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
         const roles = results[0].role
+        const obj = {
+            v1: token,
+            v2: roles
+        }
+        const searchParams = new URLSearchParams(obj);
+        const queryString = searchParams.toString();
         console.log(roles)
-        response.status(200).redirect(`query/:${roles}=${token}`)
+        response.status(200).redirect(`query.html?` + queryString)
         return
       } else {
         response.status(401).redirect("/")
@@ -68,8 +74,9 @@ app.post("/login", (request, response) => {
 });
 
 app.get("/query/:roles=:jwt", (request, response) =>  {
-  response.send("WORKED");
+  response.send("query.hmtl");
 })
+
 app.post("/query", (request, response) =>  {
   // validate jwt on button click
   if(jwt){
