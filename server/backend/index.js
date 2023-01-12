@@ -4,6 +4,7 @@ const app = express();
 const sha256 = require("bcryptjs");
 const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
 const jwt = require('jsonwebtoken');
+const { response } = require("express");
 
 
 
@@ -15,6 +16,7 @@ app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
 
 
+var access = ""
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
 
@@ -51,7 +53,9 @@ app.get('/', (request, response) => {
 	response.send("index.html");
 });
 
-
+function save(fun){
+  access = fun;
+}
 app.post("/login", (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
@@ -72,10 +76,11 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = results[0].role
         // Redirect to query page
-        const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
+        var token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
+        save(token)
         const obj = {
           v1: token,
-          v2: roles
+          v2: ACCESS_TOKEN
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
@@ -89,6 +94,20 @@ app.post("/login", (request, response) => {
   } else {
     response.send("Invalid entry.")
   }
+  
+})
+
+app.post("/valid", (request, response) => 
+{
+  const income = request.body.token
+  const check = request.body.ACCESS_TOKEN
+  if(jwt.verify(check, income))
+  {
+    response.status(200)
+    return
+  }
+  response.status(401).redirect("/")
+  return
 })
 
 
