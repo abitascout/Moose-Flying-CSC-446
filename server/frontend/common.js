@@ -14,3 +14,17 @@ function query() {
     })
 }
 
+function validating(){
+    const searchParams = new URL (parsedUrl).searchParams;
+    const entries = new URLSearchParams(searchParams).entries();
+    const array = Array.from(entries);
+    console.log(array);
+    /* fetch ("http://" + parsedUrl.host + "/query"),{
+        method: "POST",
+
+    } */
+}
+
+function valid(){
+    validating();
+}

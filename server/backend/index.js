@@ -70,10 +70,16 @@ app.post("/login", (request, response) => {
       if (results.length > 0) {
         const user = {name: results[0].username}
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
-        const roles = {role: results[0].role}
+        const roles = results[0].role
         // Redirect to query page
         const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
-        response.status(200).redirect("query.html").json();
+        const obj = {
+          v1: token,
+          v2: roles
+        }
+        const searchParams = new URLSearchParams(obj);
+        const queryString = searchParams.toString();
+        response.status(200).redirect("query.html?" + queryString);
         return
       } else {
         response.status(401).redirect("/")
