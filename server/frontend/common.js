@@ -21,6 +21,7 @@ function validating(){
 
     let obj = {
         token: array[0][1],
+        acc: array[1][1]
     }
 
     fetch ("http://" + parsedUrl.host + "/valid",{

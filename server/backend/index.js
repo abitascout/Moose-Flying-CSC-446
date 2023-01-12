@@ -77,9 +77,10 @@ app.post("/login", (request, response) => {
         const roles = results[0].role
         // Redirect to query page
         const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn: '10s'});
-        save(ACCESS_TOKEN)
+        //save(ACCESS_TOKEN)
         const obj = {
-          v1: token
+          v1: token,
+          V2: ACCESS_TOKEN
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
@@ -97,10 +98,11 @@ app.post("/login", (request, response) => {
 
 app.post("/valid", (request, response) => 
 {
-  const income = request.body.token
+  const income = request.body.token;
+  const acc = request.body.acc;
   
   try{
-    jwt.verify(income, access)
+    jwt.verify(income, acc)
     return response.status(200)
     
   }
