@@ -27,7 +27,7 @@ const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
 const log = "SELECT *FROM users WHERE username = ? AND password = ?;"
 
-let connection = mysql.createConnection({
+var connection = mysql.createConnection({
   host: MYSQLHOST,
   user: MYSQLUSER,
   password: MYSQLPASS,
@@ -36,26 +36,14 @@ let connection = mysql.createConnection({
 
 
 
-app.get("/query", (request, response) =>  {
-  connection.query(SQL, [true], (error, results, fields) => {
-    if (error) {
-      console.error(error.message)
-      response.status(500).send("database error")
-    } else {
-      console.log(results)
-      response.send(results)
-    }
-  });
-})
+
 
 app.get('/', (request, response) => {
 	// Render login template
 	response.send("index.html");
 });
 
-function save(fun){
-  access = fun;
-}
+
 app.post("/login", (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
@@ -74,9 +62,9 @@ app.post("/login", (request, response) => {
       if (results.length > 0) {
         const user = {name: results[0].username}
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
-        const roles = results[0].role
+        const roles = {role: results[0].role}
         // Redirect to query page
-        const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn: '10s'});
+        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
         //save(ACCESS_TOKEN)
         const obj = {
           v1: token,
@@ -94,16 +82,25 @@ app.post("/login", (request, response) => {
   } else {
     response.send("Invalid entry.")
   }
-})
+});
 
-app.post("/valid", (request, response) => 
+app.post("/query", (request, response) => 
 {
   const income = request.body.token;
   const acc = request.body.acc;
   
   try{
-    jwt.verify(income, acc)
-    return response.status(200)
+    var payload = jwt.verify(income, acc)    
+    connection.query(SQL, [true], (error, results, fields) => {
+      if (error) {
+        console.error(error.message)
+        response.status(500).send("database error")
+      } else {
+        console.log(results)
+        response.send(results)
+      }
+    });
+    
     
   }
   catch(e)
@@ -114,7 +111,7 @@ app.post("/valid", (request, response) =>
     }
   }
   
-})
+});
   
   
 
