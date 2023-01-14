@@ -4,8 +4,11 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=example
+      - TZ=America/Chicago
     volumes:
       - ./sql:/docker-entrypoint-initdb.d/
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
   server:
     build: ./server
     restart: always
@@ -15,6 +18,7 @@ services:
       - MYSQLHOST=mysql
       - MYSQLUSER=root
       - MYSQLPASS=example
+      
     volumes:
       - ./server/backend:/app/backend
       - /usr/scr/app/node_modules 
