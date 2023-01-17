@@ -4,7 +4,12 @@ const app = express();
 const sha256 = require("bcryptjs");
 const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
 const jwt = require('jsonwebtoken');
+<<<<<<< Updated upstream
 
+=======
+const { response } = require("express");
+const { decode } = require("punycode");
+>>>>>>> Stashed changes
 
 app.use(express.json());
 app.use("/", express.static("frontend"));
@@ -13,7 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
@@ -41,7 +49,7 @@ app.post("/login", (request, response) => {
   const password = request.body.password
   const hashPassword = sha256.hashSync(password,salt)
   if (username && password) {
-    connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
+    connection.query(log,[String(username), String(hashPassword)], (error, results) => {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -52,8 +60,18 @@ app.post("/login", (request, response) => {
       if (results.length > 0) {
         const user = {name: results[0].username}
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
+<<<<<<< Updated upstream
         const token = jwt.sign(user, ACCESS_TOKEN, {expiresIn:"30s"});
         const roles = results[0].role
+=======
+        const roles = {role: results[0].role}
+        // Redirect to query page
+        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
+        decodeT = atob(token.split('.')[1])
+        decodeT = JSON.parse(decodeT)
+        console.log(decodeT.role) // role
+        //save(ACCESS_TOKEN)
+>>>>>>> Stashed changes
         const obj = {
             v1: token,
             v2: roles
@@ -73,6 +91,7 @@ app.post("/login", (request, response) => {
   }
 });
 
+<<<<<<< Updated upstream
 app.get("/query/:roles=:jwt", (request, response) =>  {
   response.send("query.hmtl");
 })
@@ -80,6 +99,16 @@ app.get("/query/:roles=:jwt", (request, response) =>  {
 app.post("/query", (request, response) =>  {
   // validate jwt on button click
   if(jwt){
+=======
+app.post("/query", (request, response) => 
+{
+  const income = request.body.token;
+  const acc = request.body.acc;
+  
+  try{
+    var payload = jwt.verify(income, acc)    
+    console.log(payload)
+>>>>>>> Stashed changes
     connection.query(SQL, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message)
@@ -89,6 +118,7 @@ app.post("/query", (request, response) =>  {
         response.send(results)
       }
     });
+<<<<<<< Updated upstream
 
   }else{
 
@@ -96,5 +126,21 @@ app.post("/query", (request, response) =>  {
 })
 
 
+=======
+    
+    
+  }
+  catch(e)
+  {
+    if(e instanceof jwt.JsonWebTokenError){
+        return response.status(401).end()
+        
+    }
+  }
+  
+});
+  
+  
+>>>>>>> Stashed changes
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
