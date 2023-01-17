@@ -35,8 +35,7 @@ app.get('/', (request, response) => {
 app.post("/login", (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
-  const username = request.body.username
-  const password = request.body.password
+  const {username, password} = request.body
   const hashPassword = sha256.hashSync(password,salt)
   if (username && password) {
     connection.query(log,[String(username), String(hashPassword)], (error, results) => {
