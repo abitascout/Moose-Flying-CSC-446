@@ -10,12 +10,8 @@ app.use(express.json());
 app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
 
-
-var access
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
-
-
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
@@ -28,9 +24,6 @@ var connection = mysql.createConnection({
   password: MYSQLPASS,
   database: "users"
 });
-
-
-
 
 
 app.get('/', (request, response) => {
@@ -109,8 +102,5 @@ app.post("/query", (request, response) =>
 });
   
   
-
-
-
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
