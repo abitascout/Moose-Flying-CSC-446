@@ -52,14 +52,14 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = results[0].role
         // Redirect to query page
-        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: "10S"});
+        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: "10s"});
         decodeT = atob(token.split('.')[1])
         decodeT = JSON.parse(decodeT)
         console.log(decodeT.role) // role
         //save(ACCESS_TOKEN)
         const obj = {
             v1: token,
-            v2: roles
+            v2: ACCESS_TOKEN
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
