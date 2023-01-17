@@ -1,19 +1,5 @@
 var parsedUrl = new URL(window.location.href);
 
-<<<<<<< Updated upstream
-function query() {
-    fetch("http://" + parsedUrl.host + "/query", {
-        method: "GET",
-        mode: "no-cors",
-    })
-    .then((resp) => resp.text())
-    .then((data) => {
-        document.getElementById("response").innerHTML = data;
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-=======
 const query = async() =>{
     const searchParams = new URL (parsedUrl).searchParams;
     const entries = new URLSearchParams(searchParams).entries();
@@ -46,7 +32,6 @@ const beforequery = async () =>{
     if(data != "undefined"){
         console.log(data)
         document.getElementById("response").innerHTML = data}
->>>>>>> Stashed changes
 }
 
 

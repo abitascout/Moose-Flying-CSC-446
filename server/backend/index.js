@@ -16,15 +16,9 @@ const HOST = String(process.env.HOST);
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
-<<<<<<< Updated upstream
-const SQL = "SELECT * FROM users;"
-const login = "SELECT username, password FROM users;"
-
-=======
 const SQL = "SELECT * FROM users;" 
 
 const log = "SELECT *FROM users WHERE username = ? AND password = ?;"
->>>>>>> Stashed changes
 
 let connection = mysql.createConnection({
   host: MYSQLHOST,
@@ -35,43 +29,6 @@ let connection = mysql.createConnection({
 
 
 
-<<<<<<< Updated upstream
-app.get("/query", function (request, response) {
-  
-  connection.query(SQL, [true], (error, results, fields) => {
-    if (error) {
-      console.error(error.message)
-      response.status(500).send("database error")
-    } else {
-      console.log(results)
-      response.send(results)
-    }
-  });
-})
-
-app.post("/login", function (request, response) {
-  const username = request.query.username
-  const password = request.query.encryptedpassword
-  connection.query(login, [true], (error, results, fields)=> {
-    if (error) {
-      console.error(error.message)
-      response.status(500).send("database error")
-    } else {
-      for(let i in request)
-      {
-        if(username == results[i])
-        {
-          for(let j in request)
-          {
-            if( SHA256(password) == results[i][j])
-            {
-              response.status(200).send("Valid")
-            }
-            else
-              response.send("Invaild Username or Password")
-          }
-        }
-=======
 
 
 app.get('/', (request, response) => {
@@ -169,11 +126,19 @@ app.post("/query", (request, response) =>
       } else {
         console.log(results)
         response.send(results)
->>>>>>> Stashed changes
       }
+    });
+  }
+  catch(e)
+  {
+    if(e instanceof jwt.JsonWebTokenError){
+        return response.status(401).end()
+        
     }
-  });
-})
+  }
+});
+
+ 
 
 
 app.listen(PORT, HOST);
