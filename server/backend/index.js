@@ -90,8 +90,7 @@ app.post("/query", (request, response) =>
     });
     
     
-  }
-  catch(e)
+  } catch(e)
   {
     if(e instanceof jwt.JsonWebTokenError){
         return response.status(401).end()
