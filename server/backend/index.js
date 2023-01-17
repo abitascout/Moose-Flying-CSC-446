@@ -52,7 +52,7 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = results[0].role
         // Redirect to query page
-        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: "10s"});
+        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: "5s"});
         decodeT = atob(token.split('.')[1])
         decodeT = JSON.parse(decodeT)
         console.log(decodeT.role) // role
