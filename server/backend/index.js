@@ -53,6 +53,7 @@ app.post("/login", (request, response) => {
         const roles = {role: results[0].role}
         // Redirect to query page
         const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
+        const dtoken = jwt.verify
         //save(ACCESS_TOKEN)
         const obj = {
           v1: token,
@@ -74,11 +75,13 @@ app.post("/login", (request, response) => {
 
 app.post("/query", (request, response) => 
 {
-  const income = request.body.token;
-  const acc = request.body.acc;
+  const accessToken = request.body.token;
+  const secret = request.body.acc;
   
   try{
-    var payload = jwt.verify(income, acc)    
+    var payload = jwt.verify(accessToken, secret)
+    console.log(payload)    
+    // Decode payload & add data to sql table
     connection.query(SQL, [true], (error, results, fields) => {
       if (error) {
         console.error(error.message)
