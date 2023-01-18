@@ -25,7 +25,7 @@ const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
-const log = "SELECT *FROM users WHERE username = ? AND password = ?;"
+const log = "SELECT * FROM users WHERE username = ? AND password = ?;"
 
 var connection = mysql.createConnection({
   host: MYSQLHOST,
@@ -51,7 +51,7 @@ app.post("/login", (request, response) => {
   const password = request.body.password
   const hashPassword = sha256.hashSync(password,salt)
   if (username && password) {
-    connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
+      connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -60,7 +60,7 @@ app.post("/login", (request, response) => {
       // If we get anything from the database
       // results object will be populated
       if (results.length > 0) {
-        const user = {name: results[0].username}
+        const user = results[0].username
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = {role: results[0].role}
         // Redirect to query page
@@ -68,7 +68,8 @@ app.post("/login", (request, response) => {
         //save(ACCESS_TOKEN)
         const obj = {
           v1: token,
-          V2: ACCESS_TOKEN
+          V2: ACCESS_TOKEN,
+          v3: user
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
@@ -88,10 +89,44 @@ app.post("/query", (request, response) =>
 {
   const income = request.body.token;
   const acc = request.body.acc;
+  const user = request.body.user;
+  const itStatement = "SELECT * FROM logs;"
+  const usrStatement = "SELECT * FROM users WHERE username = ?"
   
   try{
-    var payload = jwt.verify(income, acc)    
-    connection.query(SQL, [true], (error, results, fields) => {
+    var casing;
+    var varib = true
+    var w 
+    var payload = jwt.verify(income, acc)
+    console.log(payload.role)
+    switch(String(payload.role)){
+      case "IT":
+        casing = itStatement;
+        break;
+      case "Manager":
+        casing = SQL;
+        break;
+      default:
+        casing = usrStatement;
+        varib = false;
+        w = String(user);
+        console.log(w);
+        break;
+    }
+    if(varib == false)
+    {
+      connection.query(casing, [w], (error, results) => {
+        if (error) {
+          console.error(error.message)
+          response.status(500).send("database error")
+        } else {
+          console.log(results)
+          response.send(results)
+        }
+      });
+    }
+    else{
+      connection.query(casing, [varib], (error, results) => {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -99,7 +134,7 @@ app.post("/query", (request, response) =>
         console.log(results)
         response.send(results)
       }
-    });
+    });}      
     
     
   }

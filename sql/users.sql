@@ -27,21 +27,14 @@ CREATE TABLE logs(
     PRIMARY KEY (logId)
 );
 
-INSERT INTO logs
-VALUES(
-    NULL,
-    NOW(),
-    "",
-	"",
-    "Failed"
-);
+
 
 INSERT INTO users
 VALUES(
     "Robert",
     "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe/WxLLgrVnO9tZWlddBg9Fdk87TKyhwi",
     "rhm012@email.latech.edu",
-    "Admin"
+    "IT"
 );
 
 INSERT INTO users
@@ -49,7 +42,7 @@ VALUES(
     "Jalen",
     "$2a$04$ZBcpPXMSGuV0CFmqO4ncDenf2ouId/JQwsL0wnS7iJ1bRIUGbw9KW",
     "jmb156@email.latech.edu",
-    "mid"
+    "Manager"
 );
 
 INSERT INTO users
@@ -57,9 +50,9 @@ VALUES(
     "tugboat2k",
     "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe8HiGyS9Na3971lcMt.cnt.V5i2bRuoO",
     "trt021@email.latech.edu",
-    "bottom"
+    "Usertug"
 );
 
-SELECT * FROM  logs;
+
 
 
