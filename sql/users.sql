@@ -1,18 +1,25 @@
+/*Setting the timezone*/
+SELECT @@global.time_zone;
+SET @@global.time_zone = "America/Chicago";
+
 CREATE DATABASE users;
 
 use users;
+
+
 
 /* Can use time stamps as primary key */
 CREATE TABLE users (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email    VARCHAR(255) NOT NULL,
+    role     VARCHAR(255) NOT NULL,
     PRIMARY KEY (username)
 );
 
 CREATE TABLE logs(
 	logId int NOT NULL AUTO_INCREMENT,
-    times TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    times TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     username  VARCHAR(255),
     password  VARCHAR(255),
     attemp    VARCHAR(255) NOT NULL,
@@ -20,14 +27,15 @@ CREATE TABLE logs(
     PRIMARY KEY (logId)
 );
 
-/* INSERT INTO logs(username,password,attemp,sessionTime) VALUES 
-{
-    "bit",
-    "bob",
-    "f",
-    "l"
-};
- */
+INSERT INTO logs
+VALUES(
+    NULL,
+    NOW(),
+    "",
+	"",
+    "Failed"
+);
+
 INSERT INTO users
 VALUES(
     "Robert",
@@ -52,6 +60,6 @@ VALUES(
     "Employee"
 );
 
-
+SELECT * FROM  logs;
 
 

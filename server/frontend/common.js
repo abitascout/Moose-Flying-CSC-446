@@ -34,4 +34,6 @@ const beforequery = async () =>{
         document.getElementById("response").innerHTML = data}
 }
 
-
+function leave(){
+    window.location.replace("http://" + parsedUrl.host)
+}

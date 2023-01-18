@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
 <head>
-    
-    <script type="text/javascript" src="./loginpage.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
 </head>
 <body>
     <h2>Login Here</h2>
-    
-        <form action="" class="login">
-           
-            <label for="username"> 
-                <input type="text" id="username" class="login" required>
-            </label>
+    <div class="response" id="response">
+        <form action="/login" class="login" method="post">
+            <label for="username"></label>
+            <input type="text" name="username" id="username" class="login" placeholder="username" required>
 
-            
-            <label for="password"><input type="text" id="password" class="login" required></label>
-            <button class = "submit" onclick="login()">Login</button>
+            <label for="password"></label>
+            <input type="password" name="password" id="password" class="login" placeholder="password" required>
+            <input type = "submit" value="Login">
         </form>
-        <div class="response" id="response"></div>
+    </div>
 </body>
 </html>

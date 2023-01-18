@@ -1,14 +1,22 @@
 const express = require("express");
 const mysql = require("mysql2");
-const SHA256 = require("crypto-js/sha256");
-
-
-
-
 const app = express();
+const sha256 = require("bcryptjs");
+const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
+const jwt = require('jsonwebtoken');
+const { response } = require("express");
+
+
+
+
+
+
 app.use(express.json());
 app.use("/", express.static("frontend"));
+app.use(express.urlencoded({ extended: true }));
 
+
+var access
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
 
@@ -16,11 +24,10 @@ const HOST = String(process.env.HOST);
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
-const SQL = "SELECT * FROM users;" 
-
+const SQL = "SELECT * FROM users;"
 const log = "SELECT *FROM users WHERE username = ? AND password = ?;"
 
-let connection = mysql.createConnection({
+var connection = mysql.createConnection({
   host: MYSQLHOST,
   user: MYSQLUSER,
   password: MYSQLPASS,
