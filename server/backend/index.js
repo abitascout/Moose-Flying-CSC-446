@@ -4,7 +4,6 @@ const app = express();
 const sha256 = require("bcryptjs");
 const salt = '$2a$04$ZBcpPXMSGuV0CFmqO4ncDe';
 const jwt = require('jsonwebtoken');
-const { response } = require("express");
 
 app.use(express.json());
 app.use("/", express.static("frontend"));
