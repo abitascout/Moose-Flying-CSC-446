@@ -7,7 +7,8 @@ const query = async() =>{
 
     let obj = {
         token: array[0][1],
-        acc: array[1][1]
+        acc: array[1][1], 
+        user: array[2][1]
     }
     const response = await fetch ("http://" + parsedUrl.host + "/query",{
         method: "POST",

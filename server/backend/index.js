@@ -24,7 +24,6 @@ var connection = mysql.createConnection({
   database: "users"
 });
 
-
 app.get('/', (request, response) => {
 	// Render login template
 	response.send("index.html");
@@ -46,7 +45,7 @@ app.post("/login", (request, response) => {
       // If we get anything from the database
       // results object will be populated
       if (results.length > 0) {
-        const user = {name: results[0].username}
+        const user = results[0].username
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = {role: results[0].role}
         // Redirect to query page
@@ -55,7 +54,8 @@ app.post("/login", (request, response) => {
         //save(ACCESS_TOKEN)
         const obj = {
           v1: token,
-          V2: ACCESS_TOKEN
+          V2: ACCESS_TOKEN,
+          v3: user
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
@@ -76,11 +76,23 @@ app.post("/query", (request, response) =>
   const accessToken = request.body.token;
   const secret = request.body.acc;
   
+  // Dynamic sql query for each role, instead of if,else********
   try{
+    var casing;
     var payload = jwt.verify(accessToken, secret)
-    console.log(payload)    
-    // Decode payload & add data to sql table
-    connection.query(SQL, [true], (error, results, fields) => {
+    switch(String(payload.role)){
+      case "IT":
+        casing = itStatement;
+        break;
+      case "Manager":
+        casing = SQL;
+        break;
+      default:
+        casing = usrStatement;
+        varib = String(user);
+        break;
+    }
+    connection.query(casing, [varib], (error, results) => {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
@@ -89,9 +101,9 @@ app.post("/query", (request, response) =>
         response.send(results)
       }
     });
-    
-    
-  } catch(e)
+           
+  }
+  catch(e)
   {
     if(e instanceof jwt.JsonWebTokenError){
         return response.status(401).end()
