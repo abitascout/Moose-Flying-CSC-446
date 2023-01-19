@@ -30,7 +30,7 @@ app.get('/', (request, response) => {
 });
 
 
-app.post("/login", (request, response) => {
+app.post("/login", async (request, response) => {
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
   const {username, password} = request.body
@@ -49,8 +49,7 @@ app.post("/login", (request, response) => {
         const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
         const roles = {role: results[0].role}
         // Redirect to query page
-        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
-        const dtoken = jwt.verify
+        const token = jwt.sign(roles, ACCESS_TOKEN, { expiresIn: '10s' });
         //save(ACCESS_TOKEN)
         const obj = {
           v1: token,
@@ -69,6 +68,16 @@ app.post("/login", (request, response) => {
   } else {
     response.send("Invalid entry.")
   }
+  var inserting = "INSERT INTO logs (username, password, attempts, sessionTime) VALUES ( ?, ?, ?, '10s');"
+  connection.query(inserting, [String(username), String(hashPassword), String(attempts)], (error, results) =>{
+    if(error){
+      console.log(error.message)
+    }
+    else
+    {
+      console.log("Logged")
+    }
+  });
 });
 
 app.post("/query", (request, response) => 
@@ -76,7 +85,6 @@ app.post("/query", (request, response) =>
   const accessToken = request.body.token;
   const secret = request.body.acc;
   
-  // Dynamic sql query for each role, instead of if,else********
   try{
     var casing;
     var payload = jwt.verify(accessToken, secret)

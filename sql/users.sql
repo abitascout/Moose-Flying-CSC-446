@@ -19,7 +19,7 @@ CREATE TABLE logs(
     times TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     username  VARCHAR(255),
     password  VARCHAR(255),
-    attemp    VARCHAR(255) NOT NULL,
+    attempts    VARCHAR(255) NOT NULL,
     sessionTime VARCHAR(255) NOT NULL,
     PRIMARY KEY (logId)
 );
