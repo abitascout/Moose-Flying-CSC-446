@@ -50,7 +50,7 @@ VALUES(
     "tugboat2k",
     "$2a$04$ZBcpPXMSGuV0CFmqO4ncDe8HiGyS9Na3971lcMt.cnt.V5i2bRuoO",
     "trt021@email.latech.edu",
-    "Usertug"
+    "User"
 );
 
 

@@ -26,6 +26,7 @@ const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
 const log = "SELECT * FROM users WHERE username = ? AND password = ?;"
+var attempts 
 
 var connection = mysql.createConnection({
   host: MYSQLHOST,
@@ -43,19 +44,23 @@ app.get('/', (request, response) => {
 	response.send("index.html");
 });
 
+function save(x){
+    attempts = x
+}
 
-app.post("/login", (request, response) => {
+app.post("/login", (request, response) =>{
   // Capture the input fields from the index.html
   // Reference the name of the input to capture(username, password) 
   const username = request.body.username
   const password = request.body.password
   const hashPassword = sha256.hashSync(password,salt)
+  
+  
   if (username && password) {
       connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
-        return
       }
       // If we get anything from the database
       // results object will be populated
@@ -73,16 +78,31 @@ app.post("/login", (request, response) => {
         }
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
+        console.log(81)
+        save("Success")
         response.status(200).redirect("query.html?" + queryString);
-        return
       } else {
+        console.log(85)
+        save("Failure")
         response.status(401).redirect("/")
-        return
       }
     });
-  } else {
+  } 
+  else {
+    console.log(92)
+    save("Failure")
     response.send("Invalid entry.")
   }
+  var inserting = "INSERT INTO logs (username, password, attemp, sessionTime) VALUES ( ?, ?, ?, '10s');"
+  connection.query(inserting, [String(username), String(hashPassword), String(attempts)], (error, results) =>{
+    if(error){
+      console.log(error.message)
+    }
+    else
+    {
+      console.log("Logged")
+    }
+  });
 });
 
 app.post("/query", (request, response) => 
@@ -90,51 +110,66 @@ app.post("/query", (request, response) =>
   const income = request.body.token;
   const acc = request.body.acc;
   const user = request.body.user;
+  const params = request.body.params
   const itStatement = "SELECT * FROM logs;"
   const usrStatement = "SELECT * FROM users WHERE username = ?"
   
   try{
     var casing;
     var varib = true
-    var w 
     var payload = jwt.verify(income, acc)
-    console.log(payload.role)
     switch(String(payload.role)){
       case "IT":
         casing = itStatement;
+          if(params == 2){
+            connection.query(casing, [true], (error, results) => {
+              if (error) {
+                console.error(error.message)
+                response.status(500).send("database error")
+              } else {
+                console.log(results)
+                response.send(results)
+              }
+            });}
+          else{
+            response.status(401).end()
+          }
         break;
       case "Manager":
-        casing = SQL;
+        if(params == 1){
+          casing = SQL;
+          connection.query(casing, [true], (error, results) => {
+            if (error) {
+              console.error(error.message)
+              response.status(500).send("database error")
+            } else {
+              console.log(results)
+              response.send(results)
+            }
+          });}
+          else{
+            response.status(401).end()
+          }
         break;
       default:
         casing = usrStatement;
         varib = false;
-        w = String(user);
-        console.log(w);
+        var w = String(user);
+        if(params == 1){
+          connection.query(casing, [w], (error, results) => {
+            if (error) {
+              console.error(error.message)
+              response.status(500).send("database error")
+            } else {
+              console.log(results)
+              response.send(results)
+            }
+          });}
+        else{
+            response.status(401).end()
+          }
         break;
-    }
-    if(varib == false)
-    {
-      connection.query(casing, [w], (error, results) => {
-        if (error) {
-          console.error(error.message)
-          response.status(500).send("database error")
-        } else {
-          console.log(results)
-          response.send(results)
-        }
-      });
-    }
-    else{
-      connection.query(casing, [varib], (error, results) => {
-      if (error) {
-        console.error(error.message)
-        response.status(500).send("database error")
-      } else {
-        console.log(results)
-        response.send(results)
-      }
-    });}      
+    }      
     
     
   }

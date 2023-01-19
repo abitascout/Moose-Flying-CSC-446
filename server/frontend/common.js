@@ -1,14 +1,14 @@
 var parsedUrl = new URL(window.location.href);
 
-const query = async() =>{
+const query = async(x) =>{
     const searchParams = new URL (parsedUrl).searchParams;
     const entries = new URLSearchParams(searchParams).entries();
     const array = Array.from(entries);
-    console.log(array)
     let obj = {
         token: array[0][1],
         acc: array[1][1],
-        user: array[2][1]
+        user: array[2][1],
+        params: x
     }
     const response = await fetch ("http://" + parsedUrl.host + "/query",{
         method: "POST",
@@ -18,7 +18,12 @@ const query = async() =>{
 
     if(response.status == 401)
     {
-        alert("Token expired please click exit and log in again")
+        alert("Token expired or Access Denied! Click Exit then Log back in")
+        return
+    }
+    else if(response.status == 420)
+    {
+        alert("Access denied! Get Higher Clearance")
         return
     }
     const data = response.text();
@@ -26,9 +31,9 @@ const query = async() =>{
     
     return data
 }
-const beforequery = async () =>{
+const beforequery = async (x) =>{
     document.getElementById("response").innerHTML = ""
-    const data = await query();
+    const data = await query(x);
     if(data != "undefined"){
         console.log(data)
         document.getElementById("response").innerHTML = data}
