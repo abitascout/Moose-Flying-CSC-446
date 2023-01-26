@@ -26,7 +26,7 @@ const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
 const SQL = "SELECT * FROM users;"
 const log = "SELECT * FROM users WHERE username = ? AND password = ?;"
-var attempts 
+
 
 var connection = mysql.createConnection({
   host: MYSQLHOST,
@@ -44,9 +44,7 @@ app.get('/', (request, response) => {
 	response.send("index.html");
 });
 
-function save(x){
-    attempts = x
-}
+
 
 app.post("/login", (request, response) =>{
   // Capture the input fields from the index.html
@@ -54,7 +52,10 @@ app.post("/login", (request, response) =>{
   const username = request.body.username
   const password = request.body.password
   const hashPassword = sha256.hashSync(password,salt)
-  
+  var status
+  var attempts
+  var obj
+  var logId
   
   if (username && password) {
       connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
@@ -65,35 +66,22 @@ app.post("/login", (request, response) =>{
       // If we get anything from the database
       // results object will be populated
       if (results.length > 0) {
-        const user = results[0].username
-        const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
-        const roles = {role: results[0].role}
-        // Redirect to query page
-        const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
-        //save(ACCESS_TOKEN)
-        const obj = {
-          v1: token,
-          V2: ACCESS_TOKEN,
-          v3: user
-        }
-        const searchParams = new URLSearchParams(obj);
-        const queryString = searchParams.toString();
-        console.log(81)
-        save("Success")
-        response.status(200).redirect("query.html?" + queryString);
+        attempts = "Success"
+        status = 200
+        //response.status(200).redirect("query.html?" + queryString);
       } else {
-        console.log(85)
-        save("Failure")
-        response.status(401).redirect("/")
+        attempts = "Failure"
+        //response.status(401).redirect("/")
+        status = 401
       }
     });
   } 
   else {
-    console.log(92)
-    save("Failure")
+    attempts = "Failure"
     response.send("Invalid entry.")
   }
-  var inserting = "INSERT INTO logs (username, password, attemp, sessionTime) VALUES ( ?, ?, ?, '10s');"
+  var inserting = "INSERT INTO logs (username, password, loginAttemp, sessionTime) VALUES ( ?, ?, ?, '10s');"
+  //logs the attemp in log table
   connection.query(inserting, [String(username), String(hashPassword), String(attempts)], (error, results) =>{
     if(error){
       console.log(error.message)
@@ -103,6 +91,30 @@ app.post("/login", (request, response) =>{
       console.log("Logged")
     }
   });
+
+  //grabbing the latest logId
+  var grabbing = "SELECT MAX(logId) FROM logs"
+  connection.query(grabbing, [true], (error, results) =>{
+    if(error){
+      console.log(error.message)
+    }
+    else{
+      logId = results[0].logId
+    }
+  });
+  if(status == 200)
+  {
+    obj = {
+      v1:logId
+    }
+    const searchParams = new URLSearchParams(obj);
+    const queryString = searchParams.toString();
+    // change query to acces page once access page is made
+    response.status(status).redirect("query.html?" + queryString); 
+  }
+  else{
+    response.status(status).redirect("/")
+  }
 });
 
 app.post("/query", (request, response) => 
@@ -131,7 +143,7 @@ app.post("/query", (request, response) =>
                 response.send(results)
               }
             });}
-          else{
+          else if(params != 1){
             response.status(401).end()
           }
         break;
@@ -155,7 +167,6 @@ app.post("/query", (request, response) =>
         casing = usrStatement;
         varib = false;
         var w = String(user);
-        if(params == 1){
           connection.query(casing, [w], (error, results) => {
             if (error) {
               console.error(error.message)
@@ -164,10 +175,7 @@ app.post("/query", (request, response) =>
               console.log(results)
               response.send(results)
             }
-          });}
-        else{
-            response.status(401).end()
-          }
+          });
         break;
     }      
     
@@ -183,7 +191,16 @@ app.post("/query", (request, response) =>
   
 });
   
+app.post("/checking", (request, response) =>{
+
+  // moving stuff here not currently working on it right now
+  const roles = {role: results[0].role}
+  const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
+  const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
   
+
+
+});
 
 
 
