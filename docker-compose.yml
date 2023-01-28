@@ -18,6 +18,7 @@ services:
       - MYSQLHOST=mysql
       - MYSQLUSER=root
       - MYSQLPASS=example
+      - TZ=America/Chicago
       
     volumes:
       - ./server/backend:/app/backend
