@@ -1,6 +1,4 @@
-body {
-    background-color: lightblue;
-}
+
 .content{
     position:absolute;
     top:50%;
@@ -21,4 +19,9 @@ body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     margin-left: 40%;
     cursor: pointer;
+}
+
+.card {
+    background-color: transparent;
+
 }

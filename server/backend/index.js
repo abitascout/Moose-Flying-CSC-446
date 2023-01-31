@@ -8,24 +8,16 @@ const jwt = require('jsonwebtoken');
 const { response } = require("express");
 const { stat } = require("fs");
 
-
-
-
-
-
 app.use(express.json());
 app.use("/", express.static("frontend"));
 app.use(express.urlencoded({ extended: true }));
 
-
-
 const PORT = String(process.env.PORT);
 const HOST = String(process.env.HOST);
-
-
 const MYSQLHOST = String(process.env.MYSQLHOST);
 const MYSQLUSER = String(process.env.MYSQLUSER);
 const MYSQLPASS = String(process.env.MYSQLPASS);
+
 const SQL = "SELECT * FROM users;"
 const log = "SELECT * FROM users WHERE username = ? AND password = ?;"
 
@@ -44,7 +36,6 @@ function roundToNearestSeconds(date) {
   let times = new Date(Math.ceil(date.getTime() / ms) * ms)
   return times;
 }
-
 
 // generates the access code
 function checking(){
@@ -76,7 +67,6 @@ app.get('/', (request, response) => {
 	// Render login template
 	response.send("index.html");
 });
-
 
 
 app.post("/login", async function (request, response){
