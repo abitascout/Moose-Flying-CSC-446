@@ -37,6 +37,7 @@ var connection = mysql.createConnection({
   database: "users"
 });
 
+// rounds to the nearset 30 seconds
 function roundToNearestSeconds(date) {
   const minutes = .5
   const ms = 1000 * 60 * minutes;
@@ -44,6 +45,8 @@ function roundToNearestSeconds(date) {
   return times;
 }
 
+
+// generates the access code
 function checking(){
   var key = "monkey";
   let date = new Date();
@@ -58,7 +61,6 @@ function checking(){
       for(var x = 0; x < hashes.length; x++){
           var can = Number(hashes[x]);
           if(0 <= can <= 9 && !isNaN(can)){
-                  console.log(can);
                   digits +=String(hashes[x]);
                   counter += 1;
           }
@@ -90,26 +92,29 @@ app.post("/login", async function (request, response){
   
   if (username && password) {
 
-    const rows = await connection.query(log,[String(username), String(hashPassword)], (error, results)=> {
+    const rows = await connection.promise().query(log,[String(username), String(hashPassword)], (error, results)=> {
       if (error) {
         console.error(error.message)
         response.status(500).send("database error")
       }
-      // If we get anything from the database
-      // results object will be populated
-      if (results.length > 0) {
+    });
+    if(rows[0][0] != null )
+    {
+      if (rows[0][0].username == username && rows[0][0].password == hashPassword){
         attempts = "Success"
-        console.log(81)
-        console.log(attempts)
         status = 200
-        //response.status(200).redirect("query.html?" + queryString);
-      } else {
+      }
+      else{
         attempts = "Failure"
-        //response.status(401).redirect("/")
         status = 401
       }
-    });
-    console.log(rows)
+    }
+    else{
+      attempts = "Failure"
+      status = 401
+    }
+    
+    
   } 
   else {
     attempts = "Failure"
@@ -117,15 +122,13 @@ app.post("/login", async function (request, response){
   }
   var inserting = "INSERT INTO logs (username, password, loginAttemp, sessionTime) VALUES ( ?, ?, ?, '10s');"
   //logs the attemp in log table
-  console.log(14)
-  console.log(attempts)
   connection.query(inserting, [String(username), String(hashPassword), String(attempts)], (error, results) =>{
     if(error){
       console.log(error.message)
     }
     else
     {
-      console.log("Logged")
+      console.log("Login Logged")
     }
   });
 
@@ -146,7 +149,7 @@ app.post("/login", async function (request, response){
         const searchParams = new URLSearchParams(obj);
         const queryString = searchParams.toString();
         // change query to acces page once access page is made
-        response.status(status).redirect("access.html?" + queryString); 
+        response.status(status).redirect("/access.html?" + queryString); 
       }
       else{
         response.status(status).redirect("/")
@@ -156,6 +159,7 @@ app.post("/login", async function (request, response){
   
 });
 
+// this is the query route and based on the users role get the appropriate information
 app.post("/query", (request, response) => 
 {
   const income = request.body.token;
@@ -171,19 +175,31 @@ app.post("/query", (request, response) =>
     var payload = jwt.verify(income, acc)
     switch(String(payload.role)){
       case "IT":
-        casing = itStatement;
+        
           if(params == 2){
+            casing = itStatement;
             connection.query(casing, [true], (error, results) => {
               if (error) {
                 console.error(error.message)
                 response.status(500).send("database error")
               } else {
-                console.log(results)
                 response.send(results)
               }
             });}
           else if(params != 1){
             response.status(401).end()
+          }
+          else{
+            casing = usrStatement
+            var w = String(user);
+            connection.query(casing, [w], (error, results) => {
+              if (error) {
+                console.error(error.message)
+                response.status(500).send("database error")
+              } else {
+                response.send(results)
+              }
+            });
           }
         break;
       case "Manager":
@@ -194,10 +210,20 @@ app.post("/query", (request, response) =>
               console.error(error.message)
               response.status(500).send("database error")
             } else {
-              console.log(results)
               response.send(results)
             }
           });}
+          else if(params == 2){
+            casing = itStatement;
+            connection.query(casing, [true], (error, results) => {
+              if (error) {
+                console.error(error.message)
+                response.status(500).send("database error")
+              } else {
+                response.send(results)
+              }
+            });
+           }
           else{
             response.status(401).end()
           }
@@ -206,15 +232,19 @@ app.post("/query", (request, response) =>
         casing = usrStatement;
         varib = false;
         var w = String(user);
+        if(params == 1){
           connection.query(casing, [w], (error, results) => {
             if (error) {
               console.error(error.message)
               response.status(500).send("database error")
             } else {
-              console.log(results)
               response.send(results)
             }
           });
+          }
+          else{
+            response.send("Access Denied")
+          }
         break;
     }      
     
@@ -229,55 +259,58 @@ app.post("/query", (request, response) =>
   }
   
 });
-  
+// checks user inputed access token with our access token
 app.post("/checking", async function (request, response) {
   
   var checks = await checking();
   const id = request.body.logId
-  const inn = request.body.inputs
+  const inn = request.body.input
   var gotIn 
   var searchParams
   var status2
-  const checkLogs = "Select * from logs where logid = ?;"
-  connection.query(checkLogs, [String(id)], (error, results) => {
+  //checks the logs and users table for the common username between both  based on log id
+  const checkLogs = "Select * from logs INNER JOIN users ON logs.username=users.username WHERE logid = ?;"
+  const dataLogs = await connection.promise().query(checkLogs, [String(id)], (error, results) => {
     if(error){
       console.log(error.message)
       console.status(500).send("database error")
     }
-    else{
-      const check = {check : results[0].attempts}
-      console.log(21)
-      console.log(check)
-      switch(check){
-        case("Success"):
-            if (checks == inn){
-              const roles = {role: results[0].role}
-              const user = results[0].username
-              const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
-              const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: '10s'});
-              let obj = {
-                v1: token,
-                v2: ACCESS_TOKEN,
-                v3: user
-              }
-              searchParams = new URLSearchParams(obj)
-              gotIn = "Success"
-            }
-            else
-            {
-              gotIn = "Failed"
-              status2 = 401
-            }
-            break;
-          default:
-            gotIn = "Failed"
-            status2 = 402
-            break;
-      }
-      
+    else{     
     }
   });
 
+  const check = dataLogs[0][0].loginAttemp
+  switch(check){
+    case("Success"):
+        // if the login was a success and the access token matches ours then generate the jwt token
+        if (checks == inn){
+          const roles = {role: dataLogs[0][0].role}
+          const user = dataLogs[0][0].username
+          const ACCESS_TOKEN = require('crypto').randomBytes(64).toString('hex');
+          const token = jwt.sign(roles, ACCESS_TOKEN, {expiresIn: "10s"});
+          let obj = {
+            v1: token,
+            v2: ACCESS_TOKEN,
+            v3: user
+          }
+          searchParams = new URLSearchParams(obj)
+          gotIn = "Success"
+        }
+        else
+        {
+          gotIn = "Failed"
+          status2 = 401
+        }
+        break;
+      default:
+        gotIn = "Failed"
+        status2 = 402
+        break;
+  }
+
+
+
+  //updates the log table with the accessAttemp either failed or success
   var inserting = "UPDATE logs  SET accessAttemp = ? WHERE logId = ?;"
   //logs the attemp in log table
   connection.query(inserting, [String(gotIn), id], (error, results) =>{
@@ -286,22 +319,32 @@ app.post("/checking", async function (request, response) {
     }
     else
     {
-      console.log("Logged")
+      if (check != null){
+        if(gotIn == "Success"){
+          //send the nessary info to the query page
+          queryString = searchParams.toString()
+          console.log("Logged updated")
+          response.status(200).send("/query.html?" + queryString);
+          return
+          
+        }
+        else if (gotIn == "Failed")
+        {
+          if(status2 == 402){
+          // this is the failed login error handled to redirect them to the login page
+          //response.send("Failed Login Attemp Sending to Login page.")
+          return response.status(402).send("/")}
+          else
+          {
+            //this is the entered wrong access code hadler.
+            return response.sendStatus(401)
+          }
+        }
+        
     }
-    if(gotIn == "Success"){
-      queryString = searchParams.toString()
-      response.status(200).redirect("query.html?" + queryString);
-    }
-    else if (gotIn == "Failed")
-    {
-      if(status2 = 402){
-      response.send("Failed Login Attemp Sending to Login page.")
-      response.status(402).redirect("/").end()}
-      else
-      {
-        response.status(401)
       }
-    }
+      
+    
   });
 
 

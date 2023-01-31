@@ -26,6 +26,9 @@ const query = async(x) =>{
         alert("Access denied! Get Higher Clearance")
         return
     }
+    else{
+        console.log(response.status)
+    }
     const data = response.text();
     
     
@@ -35,7 +38,6 @@ const beforequery = async (x) =>{
     document.getElementById("response").innerHTML = ""
     const data = await query(x);
     if(data != "undefined"){
-        console.log(data)
         document.getElementById("response").innerHTML = data}
 }
 
