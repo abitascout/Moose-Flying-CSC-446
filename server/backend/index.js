@@ -350,6 +350,20 @@ app.post("/checking", async function (request, response) {
 
 });
 
+app.post("/comments", (request, response) =>{
+  var commentSql = "INSERT INTO comments (Comm) VALUES (?)"
+  const message = request.body.message
+  connection.query(commentSql, [String(message)], (error, results) =>{
+    if(error){
+      console.log(error.message)
+      response.status(500).send("database error")
+    }
+    else{   
+      response.send(results)  
+    }
+  })
+});
+
 
 
 app.listen(PORT, HOST);
