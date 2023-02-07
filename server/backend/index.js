@@ -351,19 +351,38 @@ app.post("/checking", async function (request, response) {
 });
 
 app.post("/comments", (request, response) =>{
-  var commentSql = "INSERT INTO comments (Comm) VALUES (?)"
-  const message = request.body.message
+  var commentSql = "INSERT INTO submitedComments (Comm) VALUES (?)"
+  const message = request.body.comment
+  console.log(message)
   connection.query(commentSql, [String(message)], (error, results) =>{
     if(error){
       console.log(error.message)
       response.status(500).send("database error")
     }
     else{   
-      response.send(results)  
+      response.status(200).redirect("/Blog.html")
     }
-  })
+  });
 });
 
+app.get("/getComments", async function (request, response){
+  var comm = "SELECT Comm FROM submitedComments;"
+  const con = await connection.promise().query(comm, [true], (error,results) => {
+    if(error){
+      console.log(error)
+    }
+    else{
+      console.log(results)
+    }
+  });
+  if(con[0] != null ){
+    var obj = {
+      v1: con[0]
+    }
+    var temp = JSON.stringify(obj)
+    response.send(temp)
+  }
+});
 
 
 app.listen(PORT, HOST);
