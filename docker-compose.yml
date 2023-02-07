@@ -19,10 +19,10 @@ services:
       - MYSQLUSER=root
       - MYSQLPASS=example
       - TZ=America/Chicago
-      
+
     volumes:
       - ./server/backend:/app/backend
-      - /usr/scr/app/node_modules 
+      - /usr/scr/app/node_modules
       - ./server/frontend:/app/frontend
     ports:
       - "8000:80"

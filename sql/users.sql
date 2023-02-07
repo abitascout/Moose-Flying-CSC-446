@@ -28,6 +28,12 @@ CREATE TABLE logs(
     PRIMARY KEY (logId)
 );
 
+CREATE TABLE submitedComments(
+    commentId int NOT NULL AUTO_INCREMENT,
+    Comm VARCHAR(255),
+    primary KEY (commentId)
+);
+
 
 
 INSERT INTO users
