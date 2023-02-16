@@ -2,4 +2,5 @@
 *.cmd
 *.cmd
 .gitignore
-    ThreatModals/
+ThreatModals/
+*.xlsx
