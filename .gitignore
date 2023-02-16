@@ -1,6 +1,5 @@
 
 *.cmd
 *.cmd
-.git
-    /ThreatModals/
-    .gitignore
+.gitignore
+    /ThreatModals
