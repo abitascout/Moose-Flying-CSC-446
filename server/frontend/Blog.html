@@ -5,25 +5,21 @@
 	<link type="text/css" rel="stylesheet" href="common.css">
 	<script type="text/javascript" src="blog.js"></script>
     <head>
-        <title>
-            Rick & Morty's WordSearch
-        </title>
+    <title> Rick & Morty's WordSearch</title>
     </head>
-
-
         <div class="blog">
             <p></p>
-            <div class="blogPic"><img src = "./images/issue 1.jpeg" alt = "Wordsearch"></div>
-            <div class="blogPic"><img src = "./images/issue 23.jpg" alt = "WordSearch"></div>
-            <p></p>
-            <div class="comments" id = "insertCommentsHere">       
-            <p></p>
-            <form action="/comments" method = "post">
+            <div class="leftPic"><img src = "./images/issue 1.jpeg" alt = "Wordsearch"></div>
+            <div class="rightPic"><img src = "./images/issue 23.jpg" alt = "WordSearch"></div>
+        </div>
+    
+        <div>
+            <form class="comments" action="/comments" method = "post">
                 <label for="Your Comment"></label>
                 <input type="text" name="comment" id = "message" class="comment" placeholder="Comment" required>
                 <input type = "submit" value="Comment">
+                <button class="blogLogin" onclick="leave()">Back to Login</button>
             </form>
-            <button class="blogLogin" onclick="leave()">Back to Login</button>
         </div>
     </body>
 </html>

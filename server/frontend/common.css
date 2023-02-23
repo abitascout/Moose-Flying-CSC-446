@@ -129,11 +129,15 @@ button{
 
 .blog{
     display: block;
-    margin-left: auto;
-    margin-right: auto;
     width: 50%;
 
 }
+
+.blog2{
+    display: flex;
+
+}
+
 
 .blogLogin{
     background-color: azure;
@@ -166,6 +170,14 @@ button{
     background-color: rgb(123, 225, 250);
     font-size: large;
 }
+
+.comments{
+    display: flex;
+    box-shadow: 0 0 40px rgba(93, 80, 190, 0.6);
+    background-color: rgba(228, 215, 215, 0.13);
+    margin-left: 20%;
+}
+
 .accessInput {
     padding: 10px;
 }
